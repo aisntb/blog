@@ -5,8 +5,8 @@ import "./post.css"
 import { useParams } from 'next/navigation'
 import { parseDate } from '@/app/utils'
 import Header from '@/app/components/Header'
-import MailIcon from "../../../assets/email.svg";
-import GitIcon from "../../../assets/github.svg";
+//import MailIcon from "../../../assets/email.svg";
+//import GitIcon from "../../../assets/github.svg";
 
 
 export default function Post(){
@@ -73,10 +73,10 @@ export default function Post(){
             <p className="footer-description">빙글빙글 돌아가는 내 컴퓨터</p>
             <div className="social-links">
                 <a href="mailto:seohayeon.kr@gmail.com" className="social-link">
-                  <MailIcon style={{ fill: 'white' }}/>
+                  {/*<MailIcon style={{ fill: 'white' }}/>*/}
                 </a>
                 <a href="#" className="social-link">
-                  <GitIcon style={{ fill: 'white' }}/>
+                  {/*<GitIcon style={{ fill: 'white' }}/>*/}
                 </a>
             </div>
         </div>
