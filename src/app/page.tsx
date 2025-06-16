@@ -2,38 +2,53 @@
 import { posts, categories } from '../../.velite'
 import Article from './components/Article';
 import { useState, useEffect } from 'react';
+import { parseDate } from './utils';
+import Header from './components/Header';
 
 export default function Home() {
-  let [featured, ...otherPosts] = posts;
   const [filter, setFilter] = useState('전체')
-  const [visiblePosts, setVisiblePosts] = useState(posts);
+  const recentPosts = posts.slice().reverse().slice(0, 11);
+  const shallowCopy = recentPosts.slice();
+  const [visiblePosts, setVisiblePosts] = useState(shallowCopy.slice(1));
 
-  const updateVisibleCards = (filter:string) => {
-    const filterPosts = otherPosts.filter((e) => e.category == filter);
-    
-  }
+
+  const updateVisibleCards = (filter: string) => {
+    if (filter === "전체") {
+      const removedFirst = shallowCopy.slice(1);
+      setVisiblePosts(removedFirst);
+      return;
+    }
+    const filteredPosts = posts.filter((e) => e.category === filter).reverse().slice(0, 11);
+    setVisiblePosts(filteredPosts);
+  };
 
   useEffect(()=>{
     updateVisibleCards(filter)
   },[filter])
+
+  const [searchQ, setSearchQ] = useState('')
+
+  const handleSearch = (e:React.KeyboardEvent<HTMLInputElement>) => {
+    const code = e.code;
+    if(code == 'Enter'){
+      location.href = "/search?q="+searchQ
+    } 
+  }
   
   return (
     <div>
-      <header>
-        <div className="header-content">
-            <h1 className="header-title">Error DB</h1>
-            <p className="header-subtitle">모든 에러를 기록하려고 만든 사이트</p>
-        </div>
-    </header>
-
+    <Header/>
     <div className="container">
+        <div className="header-content">
+            <h1 className="title">Error DB</h1>
+        </div>
         <div className="search-section">
-            <input type="text" className="search-bar" placeholder="검색어를 입력하세요"/>
+            <input type="text" className="search-bar bg-white dark:bg-black" placeholder="검색어를 입력하세요" onKeyDown={handleSearch} value={searchQ} onChange={(e)=>setSearchQ(e.target.value)}/>
         </div>
 
         <div className="filter-section">
             <div className="filter-tabs">
-                <button className={`filter-tab ${filter=='전체'&&'active'}`} onClick={()=>setFilter('전체')}>전체</button>
+                <button className={`filter-tab ${filter=='전체'&&'active'} text-[#424245] dark:text-white`} onClick={()=>setFilter('전체')}>전체</button>
                 {
                   categories.map(e=>
                     <button key={e.name} className={`filter-tab ${filter==e.name&&'active'}`} onClick={()=>setFilter(e.name)}>{e.name}</button>
@@ -44,21 +59,21 @@ export default function Home() {
 
         <div className="blog-grid">
           {
-            filter=="전체"?
-              <article className="blog-card featured-post" onClick={()=>location.href=featured.permalink}>
-                <div className="featured-image"></div>
+            filter=="전체"&&recentPosts[0]?
+              <article className="blog-card featured-post bg-white dark:bg-[#020817]" onClick={()=>location.href=recentPosts[0].permalink}>
+                <div className="featured-image">{recentPosts[0].cover?<img src={recentPosts[0].cover.src}/>:null}</div>
                 <div className="featured-content">
                     <div className="featured-badge">Featured</div>
-                    <h2 className="featured-title">{featured.title}</h2>
-                    <p className="featured-excerpt">{featured.excerpt}</p>
-                    <div className="featured-meta">2024년 6월 10일 · {featured.category}</div>
+                    <h2 className="featured-title text-[#1d1d1f] dark:text-white">{recentPosts[0].title}</h2>
+                    <p className="featured-excerpt text-[#86868b] dark:text-[#94a3b8]">{recentPosts[0].subtitle? recentPosts[0].subtitle: recentPosts[0].excerpt + '...'}</p>
+                    <div className="featured-meta">{parseDate(recentPosts[0].date)} · {recentPosts[0].category}</div>
                 </div>
             </article>
             :null
           }
 
             {
-              otherPosts.map(e=>
+              visiblePosts.map(e=>
                 <Article key={e.slug} post={e}/>
               )
             }
@@ -66,7 +81,7 @@ export default function Home() {
         </div>
 
         <div className="load-more-section">
-            <button className="load-more-btn">더 많은 글 보기</button>
+            <button className="load-more-btn" onClick={()=>location.href='/archives'}>더 많은 글 보기</button>
         </div>
 
         <div className="no-results" style={{display: "none"}}>
