@@ -1,13 +1,8 @@
-import type { NextConfig } from 'next'
-
-const isDev = process.argv.indexOf('dev') !== -1
-const isBuild = process.argv.indexOf('build') !== -1
-if (!process.env.VELITE_STARTED && (isDev || isBuild)) {
-  process.env.VELITE_STARTED = '1'
-  import('velite').then(m => m.build({ watch: isDev, clean: !isDev }))
-}
-
-const nextConfig: NextConfig = {
+import { NextConfig } from 'next';
+import { build } from 'velite';
+ 
+/** @type {import('next').NextConfig} */
+export default {
   experimental: {
     turbo: {
       rules: {
@@ -18,6 +13,23 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  webpack: (config:NextConfig) => {
+    config.plugins.push(new VeliteWebpackPlugin());
+    return config;
+  },
+};
+ 
+class VeliteWebpackPlugin {
+  static started = false;
+  constructor(/** @type {import('velite').Options} */ options = {}) {
+    
+  }
+  apply(/** @type {import('webpack').Compiler} */ compiler: { hooks: { beforeCompile: { tapPromise: (arg0: string, arg1: () => Promise<void>) => void; }; }; options: { mode: string; }; }) {
+    compiler.hooks.beforeCompile.tapPromise('VeliteWebpackPlugin', async () => {
+      if (VeliteWebpackPlugin.started) return;
+      VeliteWebpackPlugin.started = true;
+      const dev = compiler.options.mode === 'development';
+      await build();
+    });
+  }
 }
-
-export default nextConfig

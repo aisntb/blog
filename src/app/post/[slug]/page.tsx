@@ -8,14 +8,8 @@ import Header from '@/app/components/Header'
 import MailIcon from "../../../assets/email.svg";
 import GitIcon from "../../../assets/github.svg";
 
-type Props = {
-  params: {
-    slug: string
-  }
-}
 
-
-export default function Post({params}:Props){
+export default function Post(){
   const { slug } = useParams<{ slug: string; }>()
  
   const post = posts.find(e => e.slug == slug)
