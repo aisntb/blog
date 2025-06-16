@@ -15,6 +15,11 @@ export default {
   },
   webpack: (config:NextConfig) => {
     config.plugins.push(new VeliteWebpackPlugin());
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
     return config;
   },
 };
