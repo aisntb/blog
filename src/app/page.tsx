@@ -6,33 +6,33 @@ import { parseDate } from './utils';
 import Header from './components/Header';
 
 export default function Home() {
-  const [filter, setFilter] = useState('전체')
-  const recentPosts = posts.slice().reverse().slice(0, 11);
-  const shallowCopy = recentPosts.slice();
-  const [visiblePosts, setVisiblePosts] = useState(shallowCopy.slice(1));
-
+  const sortedPosts = [...posts]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const recentPosts = sortedPosts.slice(0, 11);
+  const [filter, setFilter] = useState('전체');
+  const [visiblePosts, setVisiblePosts] = useState(sortedPosts.slice(1, 11));
 
   const updateVisibleCards = (filter: string) => {
     if (filter === "전체") {
-      const removedFirst = shallowCopy.slice(1);
-      setVisiblePosts(removedFirst);
-      return;
+      setVisiblePosts(sortedPosts.slice(1, 11));
+    } else {
+      const filtered = posts
+        .filter((e) => e.category === filter)
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 11);
+      setVisiblePosts(filtered);
     }
-    const filteredPosts = posts.filter((e) => e.category === filter).reverse().slice(0, 11);
-    setVisiblePosts(filteredPosts);
   };
 
-  useEffect(()=>{
-    updateVisibleCards(filter)
-  },[filter])
+  useEffect(() => {
+    updateVisibleCards(filter);
+  }, [filter]);
 
   const [searchQ, setSearchQ] = useState('')
-
-  const handleSearch = (e:React.KeyboardEvent<HTMLInputElement>) => {
-    const code = e.code;
-    if(code == 'Enter'){
-      location.href = "/search?q="+searchQ
-    } 
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter') {
+      location.href = "/search?q=" + encodeURIComponent(searchQ)
+    }
   }
   
   return (
