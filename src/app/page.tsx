@@ -4,6 +4,7 @@ import Article from './components/Article';
 import { useState, useEffect } from 'react';
 import { parseDate } from './utils';
 import Header from './components/Header';
+import ProfileBlock from './components/ProfileBlock';
 
 export default function Home() {
   const sortedPosts = [...posts]
@@ -39,12 +40,7 @@ export default function Home() {
     <div>
     <Header/>
     <div className="container">
-        <div className="header-content">
-            <h1 className="title">Error DB</h1>
-        </div>
-        <div className="search-section">
-            <input type="text" className="search-bar bg-white dark:bg-black" placeholder="검색어를 입력하세요" onKeyDown={handleSearch} value={searchQ} onChange={(e)=>setSearchQ(e.target.value)}/>
-        </div>
+        <ProfileBlock/>
 
         <div className="filter-section">
             <div className="filter-tabs">

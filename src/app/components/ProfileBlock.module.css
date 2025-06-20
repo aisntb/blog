@@ -1,0 +1,60 @@
+.container{
+    margin: 0 auto;
+    overflow: hidden;
+    margin-top: 3rem;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+}
+.profileContainer{
+    display: inline-block;
+}
+.avatar{
+    width: 8rem;
+    height: 8rem;
+    background: #e2e2e2;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+.avatar > img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+}
+.profileInfo{
+}
+.profileTitle{
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 48px;
+}
+.socialLinks {
+    display: flex;
+    gap: 12px;
+}
+
+.socialLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: #86868b;
+    text-decoration: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.socialLink:hover {
+    color: black;
+    transform: translateY(-2px);
+}
+
+.dark .socialLink:hover {
+    color: white;
+    transform: translateY(-2px);
+}
