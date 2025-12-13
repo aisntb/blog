@@ -2,7 +2,7 @@
 title: "fcitx 한글키가 alt_r로 인식되는 문제"
 category: "ricing"
 date: "2025-12-14"
-slug: "한글키리맵"
+slug: "remmap-key"
 tags: 
 - hyprland
 - fcitx
